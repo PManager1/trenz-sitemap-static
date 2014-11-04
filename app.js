@@ -5,6 +5,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+
+var fs = require('fs'); 
+var router = express.Router();
 var sm = require('sitemap');
 
 
@@ -34,9 +37,41 @@ app.get('/sitemap.xml', function(req, res) {
 
 
 
+
+
+
+var static = require('node-static');
+
+var fileServer = new static.Server('./static');
+
+require('http').createServer(function (request, response) {
+    request.addListener('end', function () {
+        fileServer.serve(request, response);
+    }).resume();
+});
+
+
+
+
+
+// app.get('/', function(req, res) {
+//   // res.sendfile(__dirname + '/public/static/index.html');
+//   res.render("index2.html");
+// });
+
+
+app.get('/', function(req, res) {
+    fs.readFile(__dirname + '/public/static/index.html', 'utf8', function(err, text){
+        res.send(text);
+    });
+});
+
+
+
+
 sitemap.urls.push({ url: '/page-5/' }); 
 
-console.log(' sitemap.urls == ', sitemap.urls);
+// console.log(' sitemap.urls == ', sitemap.urls);
 
 
 
@@ -50,7 +85,11 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+
+
+
+
+app.use(express.static(path.join(__dirname, 'public/static')));
 
 app.use('/', routes);
 app.use('/users', users);
