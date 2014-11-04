@@ -19,7 +19,7 @@ var app = express();
 
 
 var sitemap = sm.createSitemap ({
-      hostname: 'http://example.com',
+      hostname: 'http://rushnwash.com',
       cacheTime: 600000,        // 600 sec - cache purge period
       urls: [
         { url: '/page-1/',  changefreq: 'daily', priority: 0.3 },
